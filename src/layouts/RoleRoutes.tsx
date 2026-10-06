@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.ts";
+import { BUSINESS_NAME } from "../lib/brand.ts";
 import { AppFrame } from "./AppFrame.tsx";
 
 export function RequireAuth({ role }: { role: "owner" | "salesman" }) {
@@ -50,7 +51,7 @@ export function OwnerFrame() {
 function Splash() {
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-[430px] items-center justify-center bg-surface px-6">
-      <p className="text-lg font-semibold text-ink">Onion Field Sales</p>
+      <p className="text-lg font-semibold text-ink">{BUSINESS_NAME}</p>
     </div>
   );
 }
