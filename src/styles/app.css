@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", "Segoe UI", sans-serif;
+  --color-ink: #10243f;
+  --color-navy: #17375c;
+  --color-action: #1e4d86;
+  --color-surface: #f3f5f8;
+  --color-line: #e3e8ef;
+  --color-muted: #5d6d7e;
+  --color-good: #176b3f;
+  --color-warn: #8a5a00;
+  --color-bad: #9d2430;
+  --color-good-bg: #e7f5ee;
+  --color-warn-bg: #fff6e5;
+  --color-bad-bg: #fdecee;
+  --color-tint: #e7eef6;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #d5dde6;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.control {
+  width: 100%;
+  min-height: 52px;
+  border-radius: 14px;
+  border: 1px solid #d5deea;
+  background: #fff;
+  padding: 12px 14px;
+  font-size: 17px;
+  color: var(--color-ink);
+}
+
+textarea.control {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.control:focus {
+  outline: 2px solid var(--color-action);
+  outline-offset: 1px;
+}
+
+.select-control {
+  appearance: none;
+  padding-right: 42px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6.2 8 10l4-3.8' stroke='%2310243F' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+}
+
+.panel {
+  border: 1px solid var(--color-line);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(16, 36, 63, 0.05), 0 8px 20px rgba(16, 36, 63, 0.04);
+}
+
+.choice {
+  width: 100%;
+  min-height: 52px;
+  border-radius: 14px;
+  border: 1px solid #d5deea;
+  background: #fff;
+  padding: 12px 14px;
+  text-align: left;
+  color: var(--color-ink);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.choice[aria-pressed="true"] {
+  border-color: var(--color-action);
+  background: var(--color-tint);
+  box-shadow: inset 3px 0 0 var(--color-action);
+}
+
+.sticky-action {
+  position: fixed;
+  z-index: 20;
+  left: 50%;
+  width: min(430px, 100%);
+  transform: translateX(-50%);
+  bottom: calc(4.4rem + env(safe-area-inset-bottom));
+  padding: 10px 16px 12px;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-line);
+}
