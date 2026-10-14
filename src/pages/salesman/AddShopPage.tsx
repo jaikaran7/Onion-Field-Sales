@@ -114,11 +114,11 @@ export function AddShopPage() {
       update({ latitude: fix.latitude, longitude: fix.longitude, accuracy: fix.accuracy });
       if (isAcceptableAccuracy(fix.accuracy)) {
         setLocationTone("good");
-        setLocationMessage(`Location captured. Accuracy: ${Math.round(fix.accuracy)} meters`);
+        setLocationMessage(`Location captured: ±${Math.round(fix.accuracy)} m. Stand at the shop entrance for best accuracy.`);
         setErrors((current) => ({ ...current, location: undefined }));
       } else {
         setLocationTone("warn");
-        setLocationMessage("GPS accuracy is low. Please move to an open area and try again.");
+        setLocationMessage(`GPS accuracy is low (±${Math.round(fix.accuracy)} m). Please move to an open area and try again.`);
       }
     } catch (error) {
       console.error("[location]", error);
@@ -378,12 +378,12 @@ function savedLocationNote(saved: ShopDraft) {
   if (isAcceptableAccuracy(saved.accuracy)) {
     return {
       tone: "good" as const,
-      message: `Location captured. Accuracy: ${Math.round(saved.accuracy)} meters`,
+      message: `Location captured: ±${Math.round(saved.accuracy)} m. Stand at the shop entrance for best accuracy.`,
     };
   }
   return {
     tone: "warn" as const,
-    message: "GPS accuracy is low. Please move to an open area and try again.",
+    message: `GPS accuracy is low (±${Math.round(saved.accuracy)} m). Please move to an open area and try again.`,
   };
 }
 

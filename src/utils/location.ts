@@ -1,7 +1,7 @@
 import type { GeoFailure, GeoFix } from "../types/domain.ts";
 
 export function isAcceptableAccuracy(accuracy: number) {
-  return Number.isFinite(accuracy) && accuracy > 0 && accuracy <= 30;
+  return Number.isFinite(accuracy) && accuracy > 0 && accuracy <= 100;
 }
 
 export function locationErrorMessage(code: GeoFailure) {
@@ -23,20 +23,57 @@ export function getCurrentLocation() {
   }
 
   return new Promise<GeoFix>((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
+    let bestFix: GeoFix | null = null;
+    let watchId: number | null = null;
+    const timeout = 18000;
+    const earlyExitAccuracy = 15;
+
+    const timer = window.setTimeout(() => {
+      if (watchId !== null) {
+        navigator.geolocation.clearWatch(watchId);
+      }
+      if (bestFix) {
+        resolve(bestFix);
+      } else {
+        reject(failure("timeout"));
+      }
+    }, timeout);
+
+    watchId = navigator.geolocation.watchPosition(
       (position) => {
-        resolve({
+        const fix: GeoFix = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
           accuracy: position.coords.accuracy,
-        });
+        };
+
+        if (!bestFix || fix.accuracy < bestFix.accuracy) {
+          bestFix = fix;
+        }
+
+        if (fix.accuracy <= earlyExitAccuracy) {
+          clearTimeout(timer);
+          if (watchId !== null) {
+            navigator.geolocation.clearWatch(watchId);
+          }
+          resolve(bestFix);
+        }
       },
       (error) => {
+        clearTimeout(timer);
+        if (watchId !== null) {
+          navigator.geolocation.clearWatch(watchId);
+        }
         if (error.code === error.PERMISSION_DENIED) reject(failure("denied"));
-        else if (error.code === error.TIMEOUT) reject(failure("timeout"));
-        else reject(failure("unavailable"));
+        else if (error.code === error.TIMEOUT) {
+          if (bestFix) resolve(bestFix);
+          else reject(failure("timeout"));
+        } else {
+          if (bestFix) resolve(bestFix);
+          else reject(failure("unavailable"));
+        }
       },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 },
+      { enableHighAccuracy: true, timeout, maximumAge: 0 },
     );
   });
 }
